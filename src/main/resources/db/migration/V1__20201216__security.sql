@@ -1,10 +1,10 @@
 drop table if exists auth_user;
 create table auth_user
 (
-    id           varchar(32) comment '用户id',
+    id           int(10) not null auto_increment comment '用户id',
     code         varchar(32) comment '用户代码',
     username     varchar(128) comment '用户名',
-    password     varchar(32) comment '密码',
+    password     varchar(255) comment '密码',
     salt         varchar(32) comment '密码盐值',
     avatar       varchar(32) comment '头像',
     org_id       varchar(32) comment '机构',
@@ -24,7 +24,7 @@ alter table auth_user
 drop table if exists auth_user_account;;/*skiperror*/
 create table auth_user_account
 (
-    id           varchar(32) comment '账号id',
+    id           int(10) not null auto_increment comment '账号id',
     user_id      varchar(32) comment '用户id',
     account_code varchar(32) comment '账号代号',
     password     varchar(32) comment '账号密码',
@@ -43,7 +43,7 @@ alter table auth_user_account
 drop table if exists auth_user_behavior;;/*skiperror*/
 create table auth_user_behavior
 (
-    id           varchar(32) comment '记录流水号',
+    id           int(10) comment '记录流水号',
     user_id      varchar(32) comment '用户号',
     object_type  varchar(32) comment '关联对象类型',
     object_id    varchar(32) comment '关联对象号',
@@ -63,7 +63,7 @@ alter table auth_user_behavior
 drop table if exists auth_user_property;;/*skiperror*/
 create table auth_user_property
 (
-    id           varchar(32) comment '属性id',
+    id           int(10) comment '属性id',
     user_id      varchar(32) comment '用户id',
     name         varchar(32) comment '属性名',
     value        varchar(1024) comment '属性值',
@@ -80,7 +80,7 @@ alter table auth_user_property
 drop table if exists auth_org;;/*skiperror*/
 create table auth_org
 (
-    id           varchar(32) comment '机构id',
+    id           int(10) comment '机构id',
     code         varchar(32) comment '机构代号',
     name         varchar(128) comment '机构名',
     full_name    varchar(128) comment '机构路径全称',
@@ -104,8 +104,8 @@ alter table auth_org
 drop table if exists auth_org_property;;/*skiperror*/
 create table auth_org_property
 (
-    id           varchar(32) comment '属性id',
-    org_id       varchar(32) comment '机构id',
+    id           int(10) comment '属性id',
+    org_id       int(32) comment '机构id',
     name         varchar(32) comment '属性名称',
     value        varchar(1024) comment '属性值',
     revision     int comment '乐观锁',
@@ -122,9 +122,9 @@ drop table if exists auth_user_role;;/*skiperror*/
 create table auth_user_role
 (
     id            varchar(32) comment '职责id',
-    org_id        varchar(32) comment '机构id',
-    role_id       varchar(32) comment '角色id',
-    user_id       varchar(32) comment '用户id',
+    org_id        int(10) comment '机构id',
+    role_id       int(10) comment '角色id',
+    user_id       int(32) comment '用户id',
     position_type varchar(32) comment '岗位类型',
     revision      int comment '乐观锁',
     created_by    varchar(32) comment '创建人',
@@ -139,7 +139,7 @@ alter table auth_user_role
 drop table if exists auth_role;;/*skiperror*/
 create table auth_role
 (
-    id           varchar(32) comment '角色id',
+    id           int(10) comment '角色id',
     code         varchar(32) comment '角色代码',
     sort_code    varchar(128) comment '排序代码',
     name         varchar(128) comment '角色名',
@@ -161,7 +161,7 @@ drop table if exists auth_permit;;/*skiperror*/
 create table auth_permit
 (
     code         varchar(128) comment '权限代码',
-    id           varchar(32) comment '权限id',
+    id           int(10) comment '权限id',
     name         varchar(128) comment '权限名称',
     revision     int comment '乐观锁',
     created_by   varchar(32) comment '创建人',
@@ -176,8 +176,8 @@ alter table auth_permit
 drop table if exists auth_role_permit;;/*skiperror*/
 create table auth_role_permit
 (
-    id           varchar(32) comment '流水号',
-    role_id      varchar(32) comment '角色id',
+    id           int(10) comment '流水号',
+    role_id      int(10) comment '角色id',
     permit_code  varchar(32) comment '权限代码',
     revision     int comment '乐观锁',
     created_by   varchar(32) comment '创建人',
@@ -192,8 +192,8 @@ alter table auth_role_permit
 drop table if exists auth_user_permit;;/*skiperror*/
 create table auth_user_permit
 (
-    id           varchar(32) comment '流水号',
-    user_id      varchar(32) comment '用户id',
+    id           int(10) comment '流水号',
+    user_id     int(10) comment '用户id',
     permit_code  varchar(32) comment '权限代码',
     revision     int comment '乐观锁',
     created_by   varchar(32) comment '创建人',
@@ -205,13 +205,3 @@ create table auth_user_permit
 
 alter table auth_user_permit
     comment '用户直接权限';;
-
-ALTER TABLE auth_user_role
-    ADD CONSTRAINT FK_1_Role FOREIGN KEY (role_id) references auth_role(id);
-ALTER TABLE auth_user_role
-    ADD CONSTRAINT FK_1_User FOREIGN KEY (user_id) references auth_user(id);
-
-ALTER TABLE auth_user
-    ADD CONSTRAINT FK_2_Role FOREIGN KEY (id) references auth_user_role(user_id);
-ALTER TABLE auth_role
-    ADD CONSTRAINT FK_2_User FOREIGN KEY (id) references auth_user_role(role_id);
