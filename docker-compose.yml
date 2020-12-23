@@ -1,0 +1,14 @@
+version: 'V1.0'
+services:
+  renren-admin:
+    image: authing/admin
+    ports:
+      - "8080:8080"
+    environment:
+      - spring.profiles.active=dev
+  renren-api:
+    image: authing/api
+    ports:
+      - "8081:8081"
+    environment:
+      - spring.profiles.active=dev
